@@ -41,6 +41,11 @@ EnableMutationChance = 0.2
 --Memory Address
 PositionAdress = 0x04120C
 HealthAddress = 0x046DF0
+
+--Furthest right pos value for level 2 first screen
+rightGoalLevel2 = 762
+
+
 --Recommend 200 for Level 1 and 125 for Level 2
 TimeoutConstant = 125
 
@@ -1188,14 +1193,14 @@ while true do
 		
 		local timeoutBonus = pool.currentFrame / 4
 		if timeout + timeoutBonus <= 0 then
-			local fitness = (rightmost - pool.currentFrame / 2) + ((anakinHealth / anakinHealthMax) * 100)
+			local fitness = (rightmost - pool.currentFrame / 2) - ((1 / (anakinHealth / anakinHealthMax)) * 100)
 			--Below lines are to reward a species for reaching the end of the level, once we figure out how to measure that.
-			--[[ if gameinfo.getromname() == "Star Wars - Episode III - Revenge of the Sith (USA) (En,Fr,Es) " and rightmost > 4816 then
+			if gameinfo.getromname() == "Star Wars - Episode III - Revenge of the Sith (USA) (En,Fr,Es) " and rightmost > rightGoalLevel2 then
 				fitness = fitness + 1000
 			end
-			if gameinfo.getromname() == "Star Wars - Episode III - Revenge of the Sith (USA) (En,Fr,Es)" and rightmost > 3186 then
+			--[[ if gameinfo.getromname() == "Star Wars - Episode III - Revenge of the Sith (USA) (En,Fr,Es)" and rightmost > 3186 then
 				fitness = fitness + 1000
-			end ]]
+			end  ]]
 			if fitness == 0 then
 				fitness = -1
 			end
