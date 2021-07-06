@@ -15,7 +15,7 @@ ButtonNames = {
 	"Left",
 	"Right"}
 
-BoxRadius = 7
+BoxRadius = 4
 InputSize = (BoxRadius*2+1)*(BoxRadius*2+1)
 
 Inputs = InputSize+1
@@ -60,7 +60,7 @@ end
 function getSprites()
 	local sprites = {}
 	for slot=0,11 do
-		local status = memory.readbyte(0x560C+slot)
+		local status = memory.readbyte(0x0411C+slot)
 		if status ~= 0 then
 			spritex = memory.readbyte(0xE4+slot) + memory.readbyte(0x14E0+slot)*256
 			spritey = memory.readbyte(0xD8+slot) + memory.readbyte(0x14D4+slot)*256
@@ -74,7 +74,7 @@ end
 function getExtendedSprites()
 	local extended = {}
 	for slot=0,11 do
-		local number = memory.readbyte(0x170B+slot)
+		local number = memory.readbyte(0x44D4+slot)
 		if number ~= 0 then
 			spritex = memory.readbyte(0x171F+slot) + memory.readbyte(0x1733+slot)*256
 			spritey = memory.readbyte(0x1715+slot) + memory.readbyte(0x1729+slot)*256
@@ -855,7 +855,7 @@ function displayGenome(genome)
 		else
 			color = 0xFF000000
 		end
-		gui.drawText(223, 24+8*o, ButtonNames[o], color, 9)
+		gui.drawText(175, 24+8*o, ButtonNames[o], color, 9)
 	end
 	
 	for n,neuron in pairs(network.neurons) do
