@@ -13,11 +13,9 @@ ButtonNames = {
 	"Up",
 	"Down",
 	"Left",
-	"Right",
-	"Select",
-	"Start"}
+	"Right"}
 
-BoxRadius = 3
+BoxRadius = 7
 InputSize = (BoxRadius*2+1)*(BoxRadius*2+1)
 
 Inputs = InputSize+1
@@ -40,7 +38,7 @@ StepSize = 0.1
 DisableMutationChance = 0.4
 EnableMutationChance = 0.2
 
-TimeoutConstant = 100
+TimeoutConstant = 200
 
 MaxNodes = 1000000
 
