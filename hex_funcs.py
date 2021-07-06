@@ -8,4 +8,4 @@ def hex_out(file_path):
 def string_to_txt(hex_strng, des_file_name):
     file1 = open(des_file_name, 'a')
     file1.write(hex_strng)
-
+    file1.close()

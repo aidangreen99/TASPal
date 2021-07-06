@@ -1,0 +1,22 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: hex_reader.py",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": ["C:\\Users\\Aidan\\Downloads\\BizHawk-2.6.2-win-x64\\Movies\\Star Wars - Episode III - Revenge of the Sith (USA) (En,Fr,Es).tasproj"]
+        },
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        }
+    ]
+}

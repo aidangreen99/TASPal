@@ -3,4 +3,5 @@ import sys
 
 filename = sys.argv[1]
 hex_string = hf.hex_out(filename)
-print(hex_string)
+hf.string_to_txt(hex_string, "test.txt")
+
