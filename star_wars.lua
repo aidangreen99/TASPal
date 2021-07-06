@@ -1,6 +1,6 @@
 -- MarI/O by SethBling
 -- Feel free to use this code, but please do not redistribute it.
--- Intended for use with the BizHawk emulator and Super Mario World or Super Mario Bros. ROM.
+-- Intended for use with the BizHawk emulator and Super anakin World or Super anakin Bros. ROM.
 -- For SMW, make sure you have a save state named "DP1.state" at the beginning of a level,
 -- and put a copy in both the Lua folder and the root directory of BizHawk.
 
@@ -46,13 +46,13 @@ MaxNodes = 1000000
 function getPositions()
 	memory.usememorydomain("Combined WRAM")
 	local mems = memory.readbyterange(0x04120C,4)
-	marioX = mems[0] + (mems[1] * 16^2)
-	marioY = mems[2] + (mems[3] * 16^2)
+	anakinX = mems[0] + (mems[1] * 16^2)
+	anakinY = mems[2] + (mems[3] * 16^2)
 end
 
 function getTile(dx, dy)
-	x = math.floor((marioX+dx+8)/16)
-	y = math.floor((marioY+dy)/16)
+	x = math.floor((anakinX+dx+8)/16)
+	y = math.floor((anakinY+dy)/16)
 	
 	return memory.readbyte(0x041214 + math.floor(x/0x10)*0x1B0 + y*0x10 + x%0x10)
 end
@@ -98,21 +98,21 @@ function getInputs()
 			inputs[#inputs+1] = 0
 			
 			tile = getTile(dx, dy)
-			if tile == 1 and marioY+dy < 0x1B0 then
+			if tile == 1 and anakinY+dy < 0x1B0 then
 				inputs[#inputs] = 1
 			end
 			
 			for i = 1,#sprites do
-				distx = math.abs(sprites[i]["x"] - (marioX+dx))
-				disty = math.abs(sprites[i]["y"] - (marioY+dy))
+				distx = math.abs(sprites[i]["x"] - (anakinX+dx))
+				disty = math.abs(sprites[i]["y"] - (anakinY+dy))
 				if distx <= 8 and disty <= 8 then
 					inputs[#inputs] = -1
 				end
 			end
 
 			for i = 1,#extended do
-				distx = math.abs(extended[i]["x"] - (marioX+dx))
-				disty = math.abs(extended[i]["y"] - (marioY+dy))
+				distx = math.abs(extended[i]["x"] - (anakinX+dx))
+				disty = math.abs(extended[i]["y"] - (anakinY+dy))
 				if distx < 8 and disty < 8 then
 					inputs[#inputs] = -1
 				end
@@ -120,8 +120,8 @@ function getInputs()
 		end
 	end
 	
-	--mariovx = memory.read_s8(0x7B)
-	--mariovy = memory.read_s8(0x7D)
+	--anakinvx = memory.read_s8(0x7B)
+	--anakinvy = memory.read_s8(0x7D)
 	
 	return inputs
 end
@@ -1163,8 +1163,8 @@ while true do
 		joypad.set(controller)
 
 		getPositions()
-		if marioX > rightmost then
-			rightmost = marioX
+		if anakinX > rightmost then
+			rightmost = anakinX
 			timeout = TimeoutConstant
 		end
 		
