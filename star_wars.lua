@@ -14,9 +14,10 @@ ButtonNames = {
 	"Down",
 	"Left",
 	"Right",
-}
+	"Select",
+	"Start"}
 
-BoxRadius = 5
+BoxRadius = 3
 InputSize = (BoxRadius*2+1)*(BoxRadius*2+1)
 
 Inputs = InputSize+1
@@ -60,7 +61,7 @@ end
 function getSprites()
 	local sprites = {}
 	for slot=0,11 do
-		local status = memory.readbyte(0x14C8+slot)
+		local status = memory.readbyte(0x560C+slot)
 		if status ~= 0 then
 			spritex = memory.readbyte(0xE4+slot) + memory.readbyte(0x14E0+slot)*256
 			spritey = memory.readbyte(0xD8+slot) + memory.readbyte(0x14D4+slot)*256
@@ -292,12 +293,13 @@ function evaluateNetwork(network, inputs)
 	
 	local outputs = {}
 	for o=1,Outputs do
-		local button = "P1 " .. ButtonNames[o]
+		local button = ButtonNames[o]
 		if network.neurons[MaxNodes+o].value > 0 then
 			outputs[button] = true
 		else
 			outputs[button] = false
 		end
+		-- outputs[button] = true
 	end
 	
 	return outputs
@@ -760,7 +762,7 @@ end
 function clearJoypad()
 	controller = {}
 	for b = 1,#ButtonNames do
-		controller["P1 " .. ButtonNames[b]] = false
+		controller[ButtonNames[b]] = false
 	end
 	joypad.set(controller)
 end
