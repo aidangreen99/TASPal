@@ -1188,7 +1188,7 @@ while true do
 		
 		local timeoutBonus = pool.currentFrame / 4
 		if timeout + timeoutBonus <= 0 then
-			local fitness = (rightmost - pool.currentFrame / 2) + (anakinHealth / anakinHealthMax)
+			local fitness = (rightmost - pool.currentFrame / 2) + ((anakinHealth / anakinHealthMax) * 100)
 			--Below lines are to reward a species for reaching the end of the level, once we figure out how to measure that.
 			--[[ if gameinfo.getromname() == "Star Wars - Episode III - Revenge of the Sith (USA) (En,Fr,Es) " and rightmost > 4816 then
 				fitness = fitness + 1000
