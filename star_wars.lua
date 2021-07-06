@@ -38,6 +38,10 @@ StepSize = 0.1
 DisableMutationChance = 0.4
 EnableMutationChance = 0.2
 
+--Memory Address
+PositionAdress = 0x04120C
+HealthAddress = 0x045F10
+
 --Recommend 200 for Level 1 and 125 for Level 2
 TimeoutConstant = 125
 
@@ -48,6 +52,9 @@ function getPositions()
 	local mems = memory.readbyterange(0x04120C,4)
 	anakinX = mems[0] + (mems[1] * 16^2)
 	anakinY = mems[2] + (mems[3] * 16^2)
+	local mems_health = memory.readbyterange(0x045F10,4)
+	anakinHealth = mems_health[2] + (mems_health[3] * 16^2)
+	
 end
 
 function getTile(dx, dy)
@@ -1177,7 +1184,7 @@ while true do
 		
 		local timeoutBonus = pool.currentFrame / 4
 		if timeout + timeoutBonus <= 0 then
-			local fitness = rightmost - pool.currentFrame / 2
+			local fitness = (rightmost - pool.currentFrame / 2) + anakinHealth
 			if gameinfo.getromname() == "Star Wars - Episode III - Revenge of the Sith (USA) (En,Fr,Es) " and rightmost > 4816 then
 				fitness = fitness + 1000
 			end
