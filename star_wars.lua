@@ -1169,14 +1169,18 @@ while true do
 		
 		timeout = timeout - 1
 		
+		--[[ if timeout == 5 then
+			controller['A'] = true
+			joypad.set(controller)
+		end ]]
 		
 		local timeoutBonus = pool.currentFrame / 4
 		if timeout + timeoutBonus <= 0 then
 			local fitness = rightmost - pool.currentFrame / 2
-			if gameinfo.getromname() == "Super Mario World (USA)" and rightmost > 4816 then
+			if gameinfo.getromname() == "Star Wars - Episode III - Revenge of the Sith (USA) (En,Fr,Es) " and rightmost > 4816 then
 				fitness = fitness + 1000
 			end
-			if gameinfo.getromname() == "Super Mario Bros." and rightmost > 3186 then
+			if gameinfo.getromname() == "Star Wars - Episode III - Revenge of the Sith (USA) (En,Fr,Es)" and rightmost > 3186 then
 				fitness = fitness + 1000
 			end
 			if fitness == 0 then
