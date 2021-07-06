@@ -8,8 +8,8 @@ Filename = "StarWarsLevel2.state"
 ButtonNames = {
 	"A",
 	"B",
-	"L",
-	"R",
+	--"L",
+	--"R",
 	"Up",
 	"Down",
 	"Left",
@@ -38,7 +38,8 @@ StepSize = 0.1
 DisableMutationChance = 0.4
 EnableMutationChance = 0.2
 
-TimeoutConstant = 200
+--Recommend 200 for Level 1 and 125 for Level 2
+TimeoutConstant = 125
 
 MaxNodes = 1000000
 
