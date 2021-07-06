@@ -44,6 +44,8 @@ HealthAddress = 0x046DF0
 --Recommend 200 for Level 1 and 125 for Level 2
 TimeoutConstant = 125
 
+anakinHealthMax = 0
+
 MaxNodes = 1000000
 
 function getPositions()
@@ -53,6 +55,9 @@ function getPositions()
 	anakinY = mems[2] + (mems[3] * 16^2)
 	local mems_health = memory.readbyterange(0x046DF0,4)
 	anakinHealth = mems_health[2] + (mems_health[3] * 16^2)
+	if anakinHealth > anakinHealthMax then
+		anakinHealthMax = anakinHealth
+	end
 	
 end
 
@@ -1183,13 +1188,14 @@ while true do
 		
 		local timeoutBonus = pool.currentFrame / 4
 		if timeout + timeoutBonus <= 0 then
-			local fitness = (rightmost - pool.currentFrame / 2) + anakinHealth
-			if gameinfo.getromname() == "Star Wars - Episode III - Revenge of the Sith (USA) (En,Fr,Es) " and rightmost > 4816 then
+			local fitness = (rightmost - pool.currentFrame / 2) + (anakinHealth / anakinHealthMax)
+			--Below lines are to reward a species for reaching the end of the level, once we figure out how to measure that.
+			--[[ if gameinfo.getromname() == "Star Wars - Episode III - Revenge of the Sith (USA) (En,Fr,Es) " and rightmost > 4816 then
 				fitness = fitness + 1000
 			end
 			if gameinfo.getromname() == "Star Wars - Episode III - Revenge of the Sith (USA) (En,Fr,Es)" and rightmost > 3186 then
 				fitness = fitness + 1000
-			end
+			end ]]
 			if fitness == 0 then
 				fitness = -1
 			end
