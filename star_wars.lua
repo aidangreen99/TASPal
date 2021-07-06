@@ -27,6 +27,7 @@ elseif gameinfo.getromname() == "Super Mario Bros." then
 		"Right",
 	}
 end
+Filename = "Star Wars - Episode III - Revenge of the Sith (USA) (En,Fr,Es).mGBA.QuickSave1.state"
 ButtonNames = {
 	"A",
 	"B",
@@ -971,85 +972,73 @@ function displayGenome(genome)
 end
 
 function writeFile(filename)
-        local file = io.open(filename, "w")
+	dofile("saveTable.lua")
+	local f io.open("tmp/delete.me", "w")
+	if f == nil then
+		os.execute( "mkdir tmp\\" )
+	end
+	if f then
+		f:close()
+		os.remove("tmp/delete.me")
+	end
+	local f io.open(forms.gettext(botState) .. "/backups/delete.me", "w")
+	if f == nil then
+		os.execute( "mkdir " .. forms.gettext(botState) .. "\\backups\\" )
+	end
+	if f then
+		f:close()
+		os.remove(forms.gettext(botState) .. "/backups/delete.me")
+	end
+	assert( table.save( pool.species, "tmp/temp.species.table" ) == nil )
+	if filename == "temp.pool" then
+		filename = "tmp/temp.pool"
+	else
+		filename = forms.gettext(botState) .. "/backups/" .. filename
+		assert( table.save( pool.species, forms.gettext(botState) .. "/backups/backup." .. pool.generation .. "." .. "species.table" ) == nil )
+	end
+	local file = io.open(filename, "w")
 	file:write(pool.generation .. "\n")
 	file:write(pool.maxFitness .. "\n")
-	file:write(#pool.species .. "\n")
-        for n,species in pairs(pool.species) do
-		file:write(species.topFitness .. "\n")
-		file:write(species.staleness .. "\n")
-		file:write(#species.genomes .. "\n")
-		for m,genome in pairs(species.genomes) do
-			file:write(genome.fitness .. "\n")
-			file:write(genome.maxneuron .. "\n")
-			for mutation,rate in pairs(genome.mutationRates) do
-				file:write(mutation .. "\n")
-				file:write(rate .. "\n")
-			end
-			file:write("done\n")
-			
-			file:write(#genome.genes .. "\n")
-			for l,gene in pairs(genome.genes) do
-				file:write(gene.into .. " ")
-				file:write(gene.out .. " ")
-				file:write(gene.weight .. " ")
-				file:write(gene.innovation .. " ")
-				if(gene.enabled) then
-					file:write("1\n")
-				else
-					file:write("0\n")
-				end
-			end
-		end
-        end
-        file:close()
+	file:close()
+end
+
+function saveFile(filename)
+	os.execute( "mkdir " .. forms.gettext(botState) .. "\\" )
+	dofile("saveTable.lua")
+	assert( table.save( pool.species, forms.gettext(botState) .. "/species.table" ) == nil )
+	local file = io.open(forms.gettext(botState) .. "/" .. filename, "w")
+	file:write(pool.generation .. "\n")
+	file:write(pool.maxFitness .. "\n")
+	file:close()
 end
 
 function savePool()
-	local filename = forms.gettext(saveLoadFile)
-	writeFile(filename)
+	local filename = "genFitness.pool"
+	saveFile(filename)
 end
 
 function loadFile(filename)
-        local file = io.open(filename, "r")
+	dofile("saveTable.lua")
+	local file = io.open(forms.gettext(botState) .. "/" ..filename, "r")
 	pool = newPool()
 	pool.generation = file:read("*number")
 	pool.maxFitness = file:read("*number")
 	forms.settext(maxFitnessLabel, "Max Fitness: " .. math.floor(pool.maxFitness))
-        local numSpecies = file:read("*number")
-        for s=1,numSpecies do
-		local species = newSpecies()
-		table.insert(pool.species, species)
-		species.topFitness = file:read("*number")
-		species.staleness = file:read("*number")
-		local numGenomes = file:read("*number")
-		for g=1,numGenomes do
-			local genome = newGenome()
-			table.insert(species.genomes, genome)
-			genome.fitness = file:read("*number")
-			genome.maxneuron = file:read("*number")
-			local line = file:read("*line")
-			while line ~= "done" do
-				genome.mutationRates[line] = file:read("*number")
-				line = file:read("*line")
-			end
-			local numGenes = file:read("*number")
-			for n=1,numGenes do
-				local gene = newGene()
-				table.insert(genome.genes, gene)
-				local enabled
-				gene.into, gene.out, gene.weight, gene.innovation, enabled = file:read("*number", "*number", "*number", "*number", "*number")
-				if enabled == 0 then
+	local species,err = table.load( forms.gettext(botState) .. "/species.table" )
+	assert( err == nil )
+	pool.species = species
+	for n,species in pairs(pool.species) do
+		for m,genome in pairs(species.genomes) do
+			for l,gene in pairs(genome.genes) do
+				if(gene.enabled) then
 					gene.enabled = false
 				else
 					gene.enabled = true
 				end
-				
 			end
 		end
 	end
-        file:close()
-	
+	file:close()
 	while fitnessAlreadyMeasured() do
 		nextGenome()
 	end
@@ -1058,8 +1047,52 @@ function loadFile(filename)
 end
  
 function loadPool()
-	local filename = forms.gettext(saveLoadFile)
+	local filename = "genFitness.pool"
 	loadFile(filename)
+end
+
+function loadBackup()
+	dofile("saveTable.lua")
+	local nmbr = 0
+	local file = 0
+	local untilNil = 0
+	while file ~= nil do
+		file = io.open(forms.gettext(botState) .. "/backups/backup." .. nmbr .. ".genFitness.pool", "r")
+		if file ~= nil then
+			file:close()
+			untilNil = 1
+		elseif untilNil == 0 then
+			file = 0
+		end
+		nmbr = nmbr + 1
+	end
+	nmbr = nmbr - 2
+	print(nmbr)
+	file = io.open(forms.gettext(botState) .. "/backups/backup." .. nmbr .. ".genFitness.pool", "r")
+	pool = newPool()
+	pool.generation = file:read("*number")
+	pool.maxFitness = file:read("*number")
+	forms.settext(maxFitnessLabel, "Max Fitness: " .. math.floor(pool.maxFitness))
+	local species,err = table.load( forms.gettext(botState) .. "/backups/backup." .. nmbr .. ".species.table" )
+	assert( err == nil )
+	pool.species = species
+	for n,species in pairs(pool.species) do
+		for m,genome in pairs(species.genomes) do
+			for l,gene in pairs(genome.genes) do
+				if(gene.enabled) then
+					gene.enabled = false
+				else
+					gene.enabled = true
+				end
+			end
+		end
+	end
+	file:close()
+	while fitnessAlreadyMeasured() do
+		nextGenome()
+	end
+	initializeRun()
+	pool.currentFrame = pool.currentFrame + 1
 end
 
 function playTop()
@@ -1138,6 +1171,7 @@ while true do
 		local fitness = rightmost - pool.currentFrame / 2
 		if rightmost > 4816 then
 			fitness = fitness + 1000
+		end
 		if fitness == 0 then
 			fitness = -1
 		end
