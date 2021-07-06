@@ -40,8 +40,7 @@ EnableMutationChance = 0.2
 
 --Memory Address
 PositionAdress = 0x04120C
-HealthAddress = 0x045F10
-
+HealthAddress = 0x046DF0
 --Recommend 200 for Level 1 and 125 for Level 2
 TimeoutConstant = 125
 
@@ -52,7 +51,7 @@ function getPositions()
 	local mems = memory.readbyterange(0x04120C,4)
 	anakinX = mems[0] + (mems[1] * 16^2)
 	anakinY = mems[2] + (mems[3] * 16^2)
-	local mems_health = memory.readbyterange(0x045F10,4)
+	local mems_health = memory.readbyterange(0x046DF0,4)
 	anakinHealth = mems_health[2] + (mems_health[3] * 16^2)
 	
 end
