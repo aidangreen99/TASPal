@@ -27,7 +27,7 @@ elseif gameinfo.getromname() == "Super Mario Bros." then
 		"Right",
 	}
 end
-Filename = "Star Wars - Episode III - Revenge of the Sith (USA) (En,Fr,Es).mGBA.QuickSave1.state"
+Filename = "StarWarsLevel1.state"
 ButtonNames = {
 	"A",
 	"B",
@@ -39,7 +39,7 @@ ButtonNames = {
 	"Right",
 }
 
-BoxRadius = 6
+BoxRadius = 5
 InputSize = (BoxRadius*2+1)*(BoxRadius*2+1)
 
 Inputs = InputSize+1
@@ -62,7 +62,7 @@ StepSize = 0.1
 DisableMutationChance = 0.4
 EnableMutationChance = 0.2
 
-TimeoutConstant = 20
+TimeoutConstant = 100
 
 MaxNodes = 1000000
 
@@ -981,20 +981,20 @@ function writeFile(filename)
 		f:close()
 		os.remove("tmp/delete.me")
 	end
-	local f io.open(forms.gettext(botState) .. "/backups/delete.me", "w")
+	local f io.open("/backups/delete.me", "w")
 	if f == nil then
-		os.execute( "mkdir " .. forms.gettext(botState) .. "\\backups\\" )
+		os.execute( "mkdir "  .. "\\backups\\" )
 	end
 	if f then
 		f:close()
-		os.remove(forms.gettext(botState) .. "/backups/delete.me")
+		os.remove("/backups/delete.me")
 	end
 	assert( table.save( pool.species, "tmp/temp.species.table" ) == nil )
 	if filename == "temp.pool" then
 		filename = "tmp/temp.pool"
 	else
-		filename = forms.gettext(botState) .. "/backups/" .. filename
-		assert( table.save( pool.species, forms.gettext(botState) .. "/backups/backup." .. pool.generation .. "." .. "species.table" ) == nil )
+		filename = "/backups/" .. filename
+		assert( table.save( pool.species, "/backups/backup." .. pool.generation .. "." .. "species.table" ) == nil )
 	end
 	local file = io.open(filename, "w")
 	file:write(pool.generation .. "\n")
@@ -1003,10 +1003,10 @@ function writeFile(filename)
 end
 
 function saveFile(filename)
-	os.execute( "mkdir " .. forms.gettext(botState) .. "\\" )
+	os.execute( "mkdir " .. "\\" )
 	dofile("saveTable.lua")
-	assert( table.save( pool.species, forms.gettext(botState) .. "/species.table" ) == nil )
-	local file = io.open(forms.gettext(botState) .. "/" .. filename, "w")
+	assert( table.save( pool.species, "/species.table" ) == nil )
+	local file = io.open("/" .. filename, "w")
 	file:write(pool.generation .. "\n")
 	file:write(pool.maxFitness .. "\n")
 	file:close()
@@ -1019,12 +1019,12 @@ end
 
 function loadFile(filename)
 	dofile("saveTable.lua")
-	local file = io.open(forms.gettext(botState) .. "/" ..filename, "r")
+	local file = io.open("/" ..filename, "r")
 	pool = newPool()
 	pool.generation = file:read("*number")
 	pool.maxFitness = file:read("*number")
 	forms.settext(maxFitnessLabel, "Max Fitness: " .. math.floor(pool.maxFitness))
-	local species,err = table.load( forms.gettext(botState) .. "/species.table" )
+	local species,err = table.load( "/species.table" )
 	assert( err == nil )
 	pool.species = species
 	for n,species in pairs(pool.species) do
@@ -1057,7 +1057,7 @@ function loadBackup()
 	local file = 0
 	local untilNil = 0
 	while file ~= nil do
-		file = io.open(forms.gettext(botState) .. "/backups/backup." .. nmbr .. ".genFitness.pool", "r")
+		file = io.open("/backups/backup." .. nmbr .. ".genFitness.pool", "r")
 		if file ~= nil then
 			file:close()
 			untilNil = 1
@@ -1068,12 +1068,12 @@ function loadBackup()
 	end
 	nmbr = nmbr - 2
 	print(nmbr)
-	file = io.open(forms.gettext(botState) .. "/backups/backup." .. nmbr .. ".genFitness.pool", "r")
+	file = io.open(f"/backups/backup." .. nmbr .. ".genFitness.pool", "r")
 	pool = newPool()
 	pool.generation = file:read("*number")
 	pool.maxFitness = file:read("*number")
 	forms.settext(maxFitnessLabel, "Max Fitness: " .. math.floor(pool.maxFitness))
-	local species,err = table.load( forms.gettext(botState) .. "/backups/backup." .. nmbr .. ".species.table" )
+	local species,err = table.load( "/backups/backup." .. nmbr .. ".species.table" )
 	assert( err == nil )
 	pool.species = species
 	for n,species in pairs(pool.species) do
